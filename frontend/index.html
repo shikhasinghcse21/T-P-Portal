@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T&P Portal | Rewa Engineering College</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- =============================================
+     AUTH SCREEN (Login / Register toggle)
+============================================= -->
+<section id="auth-screen" class="login-container">
+    <div class="auth-card">
+
+        <!-- Logo -->
+        <div class="login-logo">
+            <span class="logo-icon">🎓</span>
+            <h2>T&amp;P <span>Portal</span></h2>
+            <p class="login-subtitle">Training &amp; Placement Cell — Rewa Engineering College</p>
+        </div>
+
+        <!-- Tab switcher -->
+        <div class="auth-tabs">
+            <button class="auth-tab active" id="tabLoginBtn" onclick="switchAuthTab('login')">Login</button>
+            <button class="auth-tab" id="tabRegisterBtn" onclick="switchAuthTab('register')">Register</button>
+        </div>
+
+        <!-- ── LOGIN FORM ── -->
+        <div id="loginSection">
+            <form id="mainLoginForm">
+                <div class="form-group">
+                    <label>Select Role</label>
+                    <select id="userRole" class="form-control" required>
+                        <option value="" disabled selected>Choose your role...</option>
+                        <option value="student">Student</option>
+                        <option value="recruiter">Recruiter</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label id="loginIdLabel">Enrollment No. / Email</label>
+                    <input type="text" id="loginId" class="form-control" placeholder="Enter ID" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPass" class="form-control" placeholder="••••••••" required>
+                </div>
+                <button type="submit" id="loginBtn" class="btn style-block">Login →</button>
+            </form>
+            <div id="loginError" class="login-error"></div>
+            <p class="auth-switch-txt">New user? <a href="#" onclick="switchAuthTab('register')">Register here</a></p>
+            
+        </div>
+
+        <!-- ── REGISTER FORM ── -->
+        <div id="registerSection" style="display:none;">
+            <div class="form-group">
+                <label>Register As</label>
+                <select id="regRole" class="form-control" onchange="toggleRegFields()">
+                    <option value="student">Student</option>
+                    <option value="recruiter">Recruiter / Corporate</option>
+                </select>
+            </div>
+
+            <!-- Student Fields -->
+            <div id="regStudentFields">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="regStuName" class="form-control" placeholder="Your full name">
+                </div>
+                <div class="form-group">
+                    <label>Enrollment Number</label>
+                    <input type="text" id="regStuEnroll" class="form-control" placeholder="e.g. 0301CS231044">
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="regStuEmail" class="form-control" placeholder="you@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Branch</label>
+                    <select id="regStuBranch" class="form-control">
+                        <option value="CSE">Computer Science (CSE)</option>
+                        <option value="IT">Information Technology (IT)</option>
+                        <option value="ECE">Electronics (ECE)</option>
+                        <option value="EE">Electrical (EE)</option>
+                        <option value="ME">Mechanical (ME)</option>
+                        <option value="CE">Civil (CE)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Set Password</label>
+                    <input type="password" id="regStuPass" class="form-control" placeholder="Create a password">
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password" id="regStuPass2" class="form-control" placeholder="Repeat password">
+                </div>
+            </div>
+
+            <!-- Recruiter Fields -->
+            <div id="regRecruiterFields" style="display:none;">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="regRecName" class="form-control" placeholder="Your name">
+                </div>
+                <div class="form-group">
+                    <label>Corporate Email</label>
+                    <input type="email" id="regRecEmail" class="form-control" placeholder="hr@company.com">
+                </div>
+                <div class="form-group">
+                    <label>Company Name</label>
+                    <input type="text" id="regRecCompany" class="form-control" placeholder="e.g. TCS, Infosys">
+                </div>
+                <div class="form-group">
+                    <label>Designation / Position</label>
+                    <input type="text" id="regRecPosition" class="form-control" placeholder="e.g. HR Manager">
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="regRecPhone" class="form-control" placeholder="e.g. 9876543210">
+                </div>
+                <div class="form-group">
+                    <label>Set Password</label>
+                    <input type="password" id="regRecPass" class="form-control" placeholder="Create a password">
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password" id="regRecPass2" class="form-control" placeholder="Repeat password">
+                </div>
+            </div>
+
+            <button class="btn style-block btn-success" id="registerBtn" onclick="handleRegister()">Register Account</button>
+            <div id="registerError" class="login-error"></div>
+            <p class="auth-switch-txt">Already registered? <a href="#" onclick="switchAuthTab('login')">Login here</a></p>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =============================================
+     PENDING SCREEN
+============================================= -->
+<section id="pending-screen" class="login-container" style="display:none;">
+    <div class="auth-card" style="text-align:center;">
+        <div style="font-size:3rem;margin-bottom:1rem;">⏳</div>
+        <h2 style="border:none;padding:0;">Account Pending Verification</h2>
+        <p style="color:#64748b;margin:1rem 0 1.5rem;" id="pendingMsg">Your account is awaiting approval from the T&amp;P Admin.</p>
+        <div class="alert alert-warning">Status: <strong>Awaiting Admin Approval</strong></div>
+        <button class="btn btn-danger" style="margin-top:1rem;" onclick="logout()">Back to Login</button>
+    </div>
+</section>
+
+
+<!-- =============================================
+     MAIN APP
+============================================= -->
+<div id="main-app" style="display:none;">
+
+    <header>
+        <div class="navbar">
+            <div class="logo">
+                <h1>T&amp;P<span>Portal</span></h1>
+                <span class="logo-tagline">Rewa Engineering College</span>
+            </div>
+            <nav class="nav-tabs" id="navTabs"></nav>
+            <div class="nav-right">
+                <span id="welcome-message"></span>
+                <button class="btn btn-logout" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- =========================================
+             STUDENT PANEL
+        ========================================= -->
+        <section id="student-panel" class="dashboard-panel">
+            <div class="page-header">
+                <h2>🎓 Student Dashboard</h2>
+                <p>Track your academic progress, apply to drives, and earn certificates.</p>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-card stat-blue">
+                    <div class="stat-icon">📚</div>
+                    <div class="stat-info">
+                        <p class="stat-label">Courses Completed</p>
+                        <p class="stat-value" id="completedCount">0</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-green">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-info">
+                        <p class="stat-label">Overall Progress</p>
+                        <p class="stat-value" id="overallProgressPercent">0%</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-yellow">
+                    <div class="stat-icon">🏅</div>
+                    <div class="stat-info">
+                        <p class="stat-label">Badges Earned</p>
+                        <p class="stat-value" id="badgeCount">0</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-purple">
+                    <div class="stat-icon">📋</div>
+                    <div class="stat-info">
+                        <p class="stat-label">Jobs Applied</p>
+                        <p class="stat-value" id="appliedJobsCount">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-profile">
+                <!-- Profile Card -->
+                <div class="card profile-card">
+                    <h3>📋 My Profile</h3>
+                    <div class="profile-pic-wrapper">
+                        <div class="profile-pic-circle">
+                            <span id="profileInitials">ST</span>
+                            <img id="profilePicImg" src="" alt="" style="display:none;">
+                        </div>
+                        <label class="profile-pic-btn" for="profilePicInput">📷 Change Photo</label>
+                        <input type="file" id="profilePicInput" accept="image/*" style="display:none;" onchange="handleProfilePic(event)">
+                    </div>
+                    <div class="form-group">
+                        <label>Enrollment Number <span class="badge-readonly">Read Only</span></label>
+                        <input type="text" id="profEnrollment" class="form-control" readonly>
+                    </div>
+                    <form id="studentProfileForm">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="profName" class="form-control" placeholder="Your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="profEmail" class="form-control" placeholder="your@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Mobile Number</label>
+                            <input type="tel" id="profMobile" class="form-control" placeholder="e.g. 9876543210">
+                        </div>
+                        <div class="form-group">
+                            <label>Engineering Branch</label>
+                            <select id="profBranch" class="form-control" required>
+                                <option value="CSE">Computer Science Engineering</option>
+                                <option value="IT">Information Technology</option>
+                                <option value="ECE">Electronics &amp; Communication</option>
+                                <option value="EE">Electrical Engineering</option>
+                                <option value="ME">Mechanical Engineering</option>
+                                <option value="CE">Civil Engineering</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Current Semester</label>
+                            <select id="profSem" class="form-control" required>
+                                <option>Sem 1</option><option>Sem 2</option><option>Sem 3</option>
+                                <option>Sem 4</option><option>Sem 5</option><option>Sem 6</option>
+                                <option selected>Sem 7</option><option>Sem 8</option>
+                            </select>
+                        </div>
+                        <div class="grid-2-col">
+                            <div class="form-group">
+                                <label>CGPA</label>
+                                <input type="number" id="profCgpa" step="0.01" min="0" max="10" class="form-control" placeholder="e.g. 8.5" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Active Backlogs</label>
+                                <input type="number" id="profBacklogs" class="form-control" value="0" min="0" required>
+                            </div>
+                        </div>
+                        <div class="grid-2-col">
+                            <div class="form-group">
+                                <label>10th Grade (%)</label>
+                                <input type="number" step="0.1" id="prof10th" class="form-control" placeholder="e.g. 85.0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>12th Grade (%)</label>
+                                <input type="number" step="0.1" id="prof12th" class="form-control" placeholder="e.g. 80.0" required>
+                            </div>
+                        </div>
+                        <label class="sgpa-label">Semester-wise SGPA Track</label>
+                        <div class="sgpa-grid">
+                            <div><label>S1</label><input type="number" step="0.01" class="form-control sgpa-input" id="sgpa1" value="0.00"></div>
+                            <div><label>S2</label><input type="number" step="0.01" class="form-control sgpa-input" id="sgpa2" value="0.00"></div>
+                            <div><label>S3</label><input type="number" step="0.01" class="form-control sgpa-input" id="sgpa3" value="0.00"></div>
+                            <div><label>S4</label><input type="number" step="0.01" class="form-control sgpa-input" id="sgpa4" value="0.00"></div>
+                            <div><label>S5</label><input type="number" step="0.01" class="form-control sgpa-input" id="sgpa5" value="0.00"></div>
+                            <div><label>S6</label><input type="number" step="0.01" class="form-control sgpa-input" id="sgpa6" value="0.00"></div>
+                            <div><label>S7</label><input type="number" step="0.01" class="form-control sgpa-input" id="sgpa7" value="0.00"></div>
+                            <div><label>S8</label><input type="number" step="0.01" class="form-control sgpa-input" id="sgpa8" value="0.00"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>Upload CV / Resume (PDF Only)</label>
+                            <input type="file" id="profResume" class="form-control" accept=".pdf">
+                        </div>
+                        <button type="submit" class="btn style-block">💾 Save Profile</button>
+                    </form>
+                </div>
+
+                <!-- Right col -->
+                <div class="profile-right-col">
+                    <div class="card" style="margin-bottom:1.5rem;">
+                        <h3>🏅 Earned Badges</h3>
+                        <div id="badgesShowcase" class="badges-showcase">
+                            <span class="empty-msg">No achievements yet. Complete courses below!</span>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                            <h3 style="margin-bottom:0;">💼 Active Job Drives</h3>
+                            <button class="btn btn-sm" style="background:#f1f5f9;color:#1e40af;border:1px solid #bfdbfe;" onclick="renderEligibleDrives()">🔄 Refresh</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table>
+                                <thead><tr><th>Company</th><th>Role</th><th>Branches</th><th>Min CGPA</th><th>CTC</th><th>Status / Apply</th></tr></thead>
+                                <tbody id="eligibleDrivesTableBody">
+                                    <tr><td colspan="6" class="empty-cell">No drives yet.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card" style="margin-top:1.5rem;">
+                        <h3>📬 My Applications</h3>
+                        <div class="table-responsive">
+                            <table>
+                                <thead><tr><th>Company</th><th>Role</th><th>Applied On</th><th>Status</th></tr></thead>
+                                <tbody id="myApplicationsBody">
+                                    <tr><td colspan="4" class="empty-cell">No applications yet.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Courses Hub -->
+            <div class="card full-width-card" style="margin-top:2rem;">
+                <div class="courses-hub-header">
+                    <div>
+                        <h3>📖 Skill Development &amp; Placement Prep Hub</h3>
+                        <p class="sub-text">Watch YouTube lectures, track progress, earn certificates.</p>
+                    </div>
+                    <div class="course-filters">
+                        <select id="courseCategoryFilter" class="form-control" onchange="renderCourseGrid()">
+                            <option value="ALL">All Modules</option>
+                            <option value="PLACEMENT_PREP">Placement Prep</option>
+                            <option value="CORE_BRANCH">Core Engineering</option>
+                        </select>
+                        <select id="courseBranchFilter" class="form-control" onchange="renderCourseGrid()">
+                            <option value="CSE">Computer Science</option>
+                            <option value="IT">Information Tech</option>
+                            <option value="ECE">Electronics (ECE)</option>
+                            <option value="EE">Electrical (EE)</option>
+                            <option value="ME">Mechanical</option>
+                            <option value="CE">Civil</option>
+                        </select>
+                        <select id="courseSemFilter" class="form-control" onchange="renderCourseGrid()">
+                            <option value="ALL">All Semesters</option>
+                            <option value="Sem 1">Semester 1</option>
+                            <option value="Sem 2">Semester 2</option>
+                            <option value="Sem 3">Semester 3</option>
+                            <option value="Sem 4">Semester 4</option>
+                            <option value="Sem 5">Semester 5</option>
+                            <option value="Sem 6">Semester 6</option>
+                            <option value="Sem 7">Semester 7</option>
+                            <option value="Sem 8">Semester 8</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="coursesContainer" class="grid-3"></div>
+            </div>
+
+            <!-- Certificates -->
+            <div class="card full-width-card" style="margin-top:2rem;border-top:3px solid var(--accent-color);">
+                <h3>🎓 Your Earned Certificates</h3>
+                <p class="sub-text" style="margin-bottom:1rem;">Complete a course 100% to unlock your certificate.</p>
+                <div class="table-responsive">
+                    <table>
+                        <thead><tr><th>Course Title</th><th>Category</th><th>Issued On</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody id="certificatesTableBody">
+                            <tr><td colspan="5" class="empty-cell">No certificates yet.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- =========================================
+             RECRUITER PANEL
+        ========================================= -->
+        <section id="recruiter-panel" class="dashboard-panel">
+            <div class="page-header">
+                <h2>🏢 Recruiter Console</h2>
+                <p>Post job notifications and review candidate applications.</p>
+                <div id="recruiterVerifiedBanner" class="alert alert-success" style="display:none;margin-top:.75rem;">
+                    ✅ Your account is <strong>Admin Verified</strong>. You can post job vacancies.
+                </div>
+            </div>
+            <div class="grid-3">
+                <div class="card">
+                    <h3>📝 Create Job Notification (JNF)</h3>
+                    <form id="jobPostingForm">
+                        <div class="form-group"><label>Company Name</label>
+                            <input type="text" id="jobCompany" class="form-control" placeholder="e.g. TCS" required></div>
+                        <div class="form-group"><label>Job Profile / Role</label>
+                            <input type="text" id="jobProfile" class="form-control" placeholder="e.g. Software Engineer" required></div>
+                        <div class="form-group"><label>CTC Package</label>
+                            <input type="text" id="jobCtc" class="form-control" placeholder="e.g. 7.5 LPA" required></div>
+                        <div class="form-group"><label>Eligible Branches (comma separated)</label>
+                            <input type="text" id="jobBranches" class="form-control" placeholder="CSE, IT, ECE or ALL" required></div>
+                        <div class="form-group"><label>Minimum CGPA</label>
+                            <input type="number" id="jobMinCgpa" step="0.1" min="0" max="10" class="form-control" value="6.0" required></div>
+                        <div class="form-group"><label>Drive Date</label>
+                            <input type="date" id="jobDate" class="form-control" required></div>
+                        <div class="form-group"><label>Job Description</label>
+                            <textarea id="jobDesc" class="form-control" rows="3" placeholder="Location, bond, perks..."></textarea></div>
+                        <button type="submit" class="btn style-block">📤 Post Drive</button>
+                    </form>
+                </div>
+                <div class="card" style="grid-column:span 2;">
+                    <h3>📥 Candidate Applications</h3>
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th>Company</th><th>Role</th><th>Enrollment No.</th><th>Name</th><th>Branch</th><th>CGPA</th><th>Profile</th><th>Status</th><th>Save</th></tr></thead>
+                            <tbody id="recruiterApplicationsTableBody">
+                                <tr><td colspan="9" class="empty-cell">No applications yet.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card full-width-card" style="margin-top:2rem;border-top:3px solid var(--secondary-color);">
+                <h3>📋 Your Posted Job Drives</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead><tr><th>Job ID</th><th>Company</th><th>Role</th><th>CTC</th><th>Branches</th><th>Min CGPA</th><th>Drive Date</th><th>Applicants</th><th>Action</th></tr></thead>
+                        <tbody id="recruiterInventoryTableBody">
+                            <tr><td colspan="9" class="empty-cell">No jobs posted yet.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- =========================================
+             ADMIN PANEL
+        ========================================= -->
+        <section id="admin-panel" class="dashboard-panel">
+            <div class="page-header">
+                <h2>⚙️ T&amp;P Admin Dashboard</h2>
+                <p>Manage students, verify recruiters, add courses, monitor placements.</p>
+            </div>
+            <div class="stats-row">
+                <div class="stat-card stat-blue">
+                    <div class="stat-icon">🎓</div>
+                    <div class="stat-info"><p class="stat-label">Registered Students</p><p class="stat-value" id="adminTotalStudents">0</p></div>
+                </div>
+                <div class="stat-card stat-green">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info"><p class="stat-label">Students Placed</p><p class="stat-value" id="adminPlacedStudents">0</p></div>
+                </div>
+                <div class="stat-card stat-orange">
+                    <div class="stat-icon">💼</div>
+                    <div class="stat-info"><p class="stat-label">Active Drives</p><p class="stat-value" id="adminDrivesCounter">0</p></div>
+                </div>
+                <div class="stat-card stat-purple">
+                    <div class="stat-icon">🏢</div>
+                    <div class="stat-info"><p class="stat-label">Pending Verifications</p><p class="stat-value" id="adminPendingCount">0</p></div>
+                </div>
+            </div>
+
+            <div class="admin-tab-bar">
+                <button class="admin-tab active" onclick="switchAdminTab('tab-recruiters')">🏢 Recruiter Verification</button>
+                <button class="admin-tab" onclick="switchAdminTab('tab-students')">🎓 Student Management</button>
+                <button class="admin-tab" onclick="switchAdminTab('tab-drives')">💼 All Job Drives</button>
+                <button class="admin-tab" onclick="switchAdminTab('tab-courses')">📚 Manage Courses</button>
+            </div>
+
+            <div id="tab-recruiters" class="admin-tab-panel active">
+                <div class="card">
+                    <h3>🏢 Recruiter Account Verification</h3>
+                    <p class="sub-text" style="margin-bottom:1rem;">Verify recruiters before they can post job vacancies.</p>
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th>Name</th><th>Email</th><th>Company</th><th>Position</th><th>Phone</th><th>Registered</th><th>Status</th><th>Actions</th></tr></thead>
+                            <tbody id="adminRecruiterVerifyTableBody">
+                                <tr><td colspan="8" class="empty-cell">No recruiters registered yet.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-students" class="admin-tab-panel">
+                <div class="card">
+                    <h3>🎓 Student Management</h3>
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th>Enrollment No.</th><th>Name</th><th>Branch</th><th>CGPA</th><th>Placement Status</th><th>Account</th><th>Actions</th></tr></thead>
+                            <tbody id="adminStudentVerificationTableBody">
+                                <tr><td colspan="7" class="empty-cell">No students registered yet.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-drives" class="admin-tab-panel">
+                <div class="card">
+                    <h3>💼 All Recruitment Drives</h3>
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th>Company</th><th>Role</th><th>CTC</th><th>Branches</th><th>Min CGPA</th><th>Drive Date</th><th>Posted By</th><th>Applications</th><th>Action</th></tr></thead>
+                            <tbody id="adminAllDrivesTableBody">
+                                <tr><td colspan="9" class="empty-cell">No drives yet.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-courses" class="admin-tab-panel">
+                <div class="grid-3">
+                    <div class="card">
+                        <h3>➕ Add New Course</h3>
+                        <form id="addCourseForm">
+                            <div class="form-group"><label>Course Title</label>
+                                <input type="text" id="newCourseTitle" class="form-control" placeholder="e.g. Advanced Java" required></div>
+                            <div class="form-group"><label>YouTube Video / Playlist URL</label>
+                                <input type="url" id="newCourseYtLink" class="form-control" placeholder="https://youtube.com/watch?v=..." required></div>
+                            <div class="form-group"><label>Category</label>
+                                <select id="newCourseCat" class="form-control">
+                                    <option value="PLACEMENT_PREP">Placement Prep</option>
+                                    <option value="CORE_BRANCH">Core Engineering</option>
+                                </select></div>
+                            <div class="form-group"><label>Target Branch</label>
+                                <select id="newCourseBranch" class="form-control">
+                                    <option value="ALL">All Branches</option>
+                                    <option value="CSE">CSE</option><option value="IT">IT</option>
+                                    <option value="ECE">ECE</option><option value="EE">EE</option>
+                                    <option value="ME">ME</option><option value="CE">CE</option>
+                                </select></div>
+                            <div class="form-group"><label>Target Semester</label>
+                                <select id="newCourseSem" class="form-control">
+                                    <option value="ALL">All Semesters</option>
+                                    <option value="Sem 1">Sem 1</option><option value="Sem 2">Sem 2</option>
+                                    <option value="Sem 3">Sem 3</option><option value="Sem 4">Sem 4</option>
+                                    <option value="Sem 5">Sem 5</option><option value="Sem 6">Sem 6</option>
+                                    <option value="Sem 7">Sem 7</option><option value="Sem 8">Sem 8</option>
+                                </select></div>
+                            <div class="form-group">
+                                <label>Badge Emoji + Name</label>
+                                <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:6px;">
+                                    <span style="font-size:0.75rem;color:#64748b;">Click emoji to add:</span>
+                                    <div id="emojiPicker" style="display:flex;gap:4px;flex-wrap:wrap;">
+                                        <!-- populated by JS -->
+                                    </div>
+                                </div>
+                                <input type="text" id="newCourseBadge" class="form-control" placeholder="e.g. 💻 Java-Pro" required>
+                            </div>
+                            <div class="form-group"><label>Total Lectures</label>
+                                <input type="number" id="newCourseLectures" class="form-control" value="10" min="1" required></div>
+                            <button type="submit" class="btn style-block btn-success">➕ Add Course</button>
+                        </form>
+                    </div>
+                    <div class="card" style="grid-column:span 2;">
+                        <h3>📋 All Courses in System</h3>
+                        <div class="table-responsive">
+                            <table>
+                                <thead><tr><th>Title</th><th>Category</th><th>Branch</th><th>Semester</th><th>Badge</th><th>YouTube</th><th>Action</th></tr></thead>
+                                <tbody id="adminCourseListBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<!-- Video Player Modal -->
+<div id="videoModal" class="video-modal-overlay" style="display:none;" onclick="closeVideoModal(event)">
+    <div class="video-modal-box">
+        <button class="video-modal-close" onclick="closeVideoModalBtn()">✕ Close</button>
+        <div class="video-modal-title" id="videoModalTitle"></div>
+        <div class="video-embed-wrap">
+            <iframe id="videoIframe" src="" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+        </div>
+        <div style="margin-top:1rem;text-align:center;">
+            <a id="videoYtDirectLink" href="#" target="_blank" class="yt-btn">▶ Open in YouTube</a>
+        </div>
+    </div>
+</div>
+
+<!-- Certificate Print -->
+<div id="certificatePrintWrapper">
+    <div class="cert-outer">
+        <div class="cert-inner">
+            <div class="cert-logo">🎓 Rewa Engineering College</div>
+            <h1 class="cert-title">Certificate of Completion</h1>
+            <p class="cert-sub">This is to certify that</p>
+            <h2 id="certStudentName" class="cert-name">Student Name</h2>
+            <p class="cert-enrollment">Enrollment No: <span id="certEnrollmentNo">—</span></p>
+            <p class="cert-body">has successfully completed the placement training module:</p>
+            <h3 id="certCourseTitle" class="cert-course">Course Title</h3>
+            <p class="cert-body">under the Training &amp; Placement Cell, Rewa Engineering College.</p>
+            <div class="cert-footer">
+                <div class="cert-sign"><div class="cert-sign-line"></div><p>T&amp;P Officer</p></div>
+                <div class="cert-seal">✅ VERIFIED</div>
+                <div class="cert-sign"><div class="cert-sign-line"></div><p>Principal</p></div>
+            </div>
+            <p class="cert-date">Issued on: <span id="certDate"></span></p>
+        </div>
+    </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
